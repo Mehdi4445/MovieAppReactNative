@@ -15,6 +15,7 @@ class Search extends React.Component{
                 <TextInput placeholder="Titre du film"/>
                 <Button title="Rechercher" onPress={() => {}}/>
             </View>
+            
 
             
         )
