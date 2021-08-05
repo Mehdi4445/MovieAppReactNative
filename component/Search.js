@@ -1,27 +1,111 @@
 import React from "react";
-import { View, Text, Image, ScrollView, TextInput, Button } from 'react-native';
+import { View, Text, Image, ScrollView, TextInput, Button, StyleSheet, FlatList } from 'react-native';
+import FilmItem from './FilmItem'
+import { getFilmsFromApiWithSearchedText } from '../assets/API/TMDB'
 
 
 
 
 
-class Search extends React.Component{
+class Search extends React.Component {
 
-    render(){
+    constructor(props) {
+        super(props);
+        this.state = { films: [] }
+    }
 
-        return(
+    _loadFilms() {
+        getFilmsFromApiWithSearchedText("fast").then(data => this.setState({ films: data }))
+    }
+    render() {
 
-            <View>
-                <TextInput placeholder="Titre du film"/>
-                <Button title="Rechercher" onPress={() => {}}/>
+
+        return (
+
+            <View style={{ marginTop: 20, flex: 1 }} >
+                <TextInput placeholder="Titre du film"
+                    style={styles.TextInput} />
+                <Button style={{ height: 50 }} title="Rechercher" onPress={() => this._loadFilms()} />
+                <View style={styles.main_container}>
+                    <Image
+                        style={styles.image}
+                        source={{ uri: "image" }}
+                    />
+                    <View style={styles.content_container}>
+                        <View style={styles.header_container}>
+                            <Text style={styles.title_text}>{this.state.films.Title}</Text>
+                            <Text style={styles.vote_text}>{this.state.films.imdbRating}</Text>
+                        </View>
+                        <View style={styles.description_container}>
+                            <Text style={styles.description_text} numberOfLines={6}>{this.state.films.Plot}</Text>
+                        </View>
+                        <View style={styles.date_container}>
+                            <Text style={styles.date_text}>{this.state.films.Released}</Text>
+                        </View>
+                    </View>
+                </View>
             </View>
-
-
-            
         )
     }
 
-
 }
 
+const styles = StyleSheet.create({
+
+    main_container: {
+        height: 190,
+        flexDirection: 'row'
+    },
+
+    TextInput: {
+        marginLeft: 5,
+        marginRight: 5,
+        height: 50,
+        paddingLeft: 5
+    },
+
+    image: {
+        width: 120,
+        height: 180,
+        margin: 5,
+        backgroundColor: 'gray'
+    },
+    content_container: {
+        flex: 1,
+        margin: 5
+    },
+    header_container: {
+        flex: 3,
+        flexDirection: 'row'
+    },
+    title_text: {
+        fontWeight: 'bold',
+        fontSize: 20,
+        flex: 1,
+        flexWrap: 'wrap',
+        paddingRight: 5
+    },
+    vote_text: {
+        fontWeight: 'bold',
+        fontSize: 26,
+        color: '#666666'
+    },
+    description_container: {
+        flex: 7
+    },
+    description_text: {
+        fontStyle: 'italic',
+        color: '#666666'
+    },
+    date_container: {
+        flex: 1
+    },
+    date_text: {
+        textAlign: 'right',
+        fontSize: 14
+    }
+
+})
+
 export default Search
+
